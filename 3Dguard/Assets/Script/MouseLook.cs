@@ -8,9 +8,12 @@ public class MouseLook : MonoBehaviour
 
   public Transform playerBody;
 
+  public YTscript shutDown;
+
   private float xRotation = 0f;
 
   public float rcRange = .3f;
+  public float timeOff = 2.5f;
 
   public bool off = false;
 
@@ -39,9 +42,11 @@ public class MouseLook : MonoBehaviour
         {
           Debug.Log("EnemyDetected");
           //turn on UI input here for the button
+          //Place shut down audio here instead of enemy
           if(Input.GetKeyDown(KeyCode.F))
           {
             Debug.Log("ROBOTOFF");
+            shutDown.ShutDown();
             //TurnOff();
           }
         }

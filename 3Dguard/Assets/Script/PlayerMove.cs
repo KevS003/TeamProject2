@@ -17,6 +17,8 @@ public class PlayerMove : MonoBehaviour
   public LayerMask groundMask;
   public float jumpHeight = 3f;
   public float normalHeight, crouchHeight;
+  public float sprintTime = 4.5f;
+  float sprintTimeOG;
   bool isCrouched = false;
   public float stunT = 1.5f;
   public int ending = 0;
@@ -28,6 +30,7 @@ public class PlayerMove : MonoBehaviour
   bool isUnder;
   bool audioPlayed =  false;
   bool winL;
+  bool isSprinting;
 
   //audioStuff here
   public AudioSource gameMusic;//if using game music
@@ -42,6 +45,8 @@ public class PlayerMove : MonoBehaviour
     {
       ogSpeed = speed;
       playerAudio = GetComponent<AudioSource>();
+      isSprinting = false;
+      sprintTimeOG = sprintTime;
 
     }
 
@@ -87,17 +92,35 @@ public class PlayerMove : MonoBehaviour
 
       if(isStunned == false)
       {
-        if(Input.GetKeyDown(KeyCode.LeftShift))
+        if(Input.GetKeyDown(KeyCode.LeftShift) && sprintTime >= 0)
         {
           speed += 6;
+          isSprinting = true;
         }
-        else if(Input.GetKeyUp(KeyCode.LeftShift))
+        else if(Input.GetKeyUp(KeyCode.LeftShift) || sprintTime <=0)
         {
-          speed -= 6;
+          if(speed == 12)
+            speed -= 6;
+          isSprinting = false;
+          Debug.Log("NO MORE SPRINT");
         }
-        if(Input.GetButtonDown("Jump")&& isGrounded && isUnder == false)//remove if jump is not needed
+        /*if(Input.GetButtonDown("Jump")&& isGrounded && isUnder == false)//remove if jump is not needed
         {
           velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }*/ //BRING BACK JUMP IF NEEDED
+      }
+
+      if(isSprinting == true)
+      {
+          sprintTime-=Time.deltaTime;
+          Debug.Log("Subtracting: "+ sprintTime);
+      }
+      else
+      {
+        if(sprintTime < sprintTimeOG)
+        {
+          sprintTime += Time.deltaTime;
+          Debug.Log("Adding: "+ sprintTime);
         }
       }
 
